@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
     pipe(p1);
     pipe(p2);
 
-    if(fork()==0){ // parent
+    if(fork()==0){ // child
         write(p1[1], &buf, 1);
         n = read(p2[0], &buf, 1);
         if(n==1){
@@ -21,13 +21,13 @@ int main(int argc, char* argv[]){
             exit(-1);
         }
     }    
-    else{ // child
+    else{ // parent
         n = read(p1[0], &buf, 1);
         if(n==1){
             printf("%d: received ping\n", getpid());
             write(p2[1], &buf, 1);
+            wait((int*)0); 
             exit(0);
-
         }
         else{
             exit(-1);
